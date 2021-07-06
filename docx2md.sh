@@ -7,7 +7,7 @@ script_path="$(dirname "$(readlink "$0" || echo "$0")")"
 script_name="$(basename "$(readlink "$0" || echo "$0")")"
 
 function usage {
-	echo "Usage: ${script_name/.sh/} WORD_DOCUMENT.DOCX"
+	echo "Usage: ${script_name/.sh/} WORD_DOCUMENT.DOCX [MARKDOWN_DOC.MD]"
 	echo
 }
 
@@ -27,12 +27,8 @@ function docx_to_md {
 	pandoc "$source" -f docx -t markdown --extract-media="$media" --wrap=none --reference-links --markdown-headings=setext
 }
 
-function get_word_meta_data {
-	unzip -p "$1" "docProps/core.xml"
-}
-
-function convert_xml_to_yaml_front_matter {
-	"$script_path/convert.py"
+function word_meta_data_to_frontmatter {
+	unzip -p "$1" "docProps/core.xml" | "$script_path/convert.py"
 }
 
 
@@ -53,12 +49,12 @@ source="$1"
 if [[ ! -r "$source" ]]; then
 	print_error "Fatal: file not found or unreadable."
 fi
-target="${source/.docx/.md}"
+target="${2:-${source/.docx/.md}}"
 header="$(mktemp docx2md.XXXXXX)"
 
 # Conversion
 echo "create header: $header"
-get_word_meta_data "$source" | convert_xml_to_yaml_front_matter > "$header"
+word_meta_data_to_frontmatter "$source" > "$header"
 echo "calling pandoc"
 docx_to_md "$source" | cat "$header" - > "$target"
 echo "removing temp"
