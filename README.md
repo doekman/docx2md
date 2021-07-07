@@ -20,6 +20,9 @@ Installation
 Todo
 ----
 
+* Found issues:
+	- links don't end up in markdown
+	- difference in  markdown (`_` vs `*`)
 * Actually test with Jekyll
 * media export is not 100%. Path is now relative to where the script is executed, not relative to document. Also, pandoc still creates a sub-folder "media".
 * Use `find` in python for proper namespace support (simplify code)
