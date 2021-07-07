@@ -14,6 +14,7 @@ Installation
 * Clone or download this repository
 * Make sure you have `pandoc` and `python3` installed
 * Run `./docx2md.sh WORD_DOCUMENT.docx`
+	-  or run `./configure.sh install`, so you can run `docx2md WORD_DOCUMENT.docx`
 
 
 Todo
